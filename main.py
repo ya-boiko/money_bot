@@ -37,6 +37,7 @@ async def get_text_message(msg: types.Message):
         )
         return
 
+    have_nums = False
     for i in words_list:
         if i.isnumeric():
             db.insert(
@@ -57,11 +58,14 @@ async def get_text_message(msg: types.Message):
                 text=f"Спасибки, записаль ✍️",
                 parse_mode=ParseMode.MARKDOWN
             )
-        else:
-            await msg.answer(
-                text=f"Напиши плиз циферки, а то нихуа не понял 😕",
-                parse_mode=ParseMode.MARKDOWN
-            )
+            have_nums = True
+
+    if not have_nums:
+        await msg.answer(
+            text=f"Напиши плиз циферки, а то нихуа не понял 😕",
+            parse_mode=ParseMode.MARKDOWN
+        )
+        return
 
 
 if __name__ == '__main__':
