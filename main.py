@@ -30,7 +30,7 @@ async def start_menu(msg: types.Message):
 @dp.message_handler(content_types=['text'])
 async def get_text_message(msg: types.Message):
     words_list = msg.text.strip().split()
-    if msg.from_user.id not in USERS:
+    if str(msg.from_user.id) not in USERS:
         await msg.answer(
             text=f"Ты че пёс охуел 🖕",
             parse_mode=ParseMode.MARKDOWN
@@ -55,6 +55,11 @@ async def get_text_message(msg: types.Message):
             )
             await msg.answer(
                 text=f"Спасибки, записаль ✍️",
+                parse_mode=ParseMode.MARKDOWN
+            )
+        else:
+            await msg.answer(
+                text=f"Напиши плиз циферки, а то нихуа не понял 😕",
                 parse_mode=ParseMode.MARKDOWN
             )
 
