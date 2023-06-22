@@ -9,13 +9,13 @@ from main import send_message_to_users_handler
 
 db = Db(DB_NAME)
 
-today = datetime.today() - timedelta(days=1)
+today = datetime.today()
 tomorrow = today + timedelta(days=1)
 result = db.query(
     query=f"""
         select * from money_notes
-        where note_date >= '{today.strftime("%d.%m.%Y")}' 
-        and note_date <= '{tomorrow.strftime("%d.%m.%Y")}';
+        where note_date >= '{today.strftime("%d.%m.%Y %H:%M:%S")}' 
+        and note_date <= '{tomorrow.strftime("%d.%m.%Y %H:%M:%S")}';
     """
 )
 

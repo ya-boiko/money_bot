@@ -5,7 +5,7 @@ from datetime import datetime
 
 import asyncio
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ParseMode, Message
+from aiogram.types import ParseMode
 from Db import Db
 
 
