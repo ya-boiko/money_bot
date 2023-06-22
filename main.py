@@ -1,8 +1,11 @@
+from aiogram.utils import exceptions
+import logging
 from settings import TOKEN, USERS, DB_NAME
 from datetime import datetime
 
+import asyncio
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ParseMode
+from aiogram.types import ParseMode, Message
 from Db import Db
 
 
@@ -67,6 +70,42 @@ async def get_text_message(msg: types.Message):
         )
         return
 
+
+async def send_message_to_users_handler(
+        user_id: int, msg_text: str, disable_notification: bool = False
+) -> Message | bool:
+    """
+    Safe messages sender
+    :param user_id:
+    :param msg_text:
+    :param disable_notification:
+    :return:
+    """
+    try:
+        await bot.send_message(
+            user_id,
+            msg_text,
+            disable_notification=disable_notification
+        )
+    except exceptions.BotBlocked:
+        logging.error(f"Target [ID:{user_id}]: blocked by user")
+    except exceptions.ChatNotFound:
+        logging.error(f"Target [ID:{user_id}]: invalid user ID")
+    except exceptions.RetryAfter as e:
+        logging.error(
+            f"Target [ID:{user_id}]: Flood limit is exceeded. "
+            f"Sleep {e.timeout} seconds."
+        )
+        await asyncio.sleep(e.timeout)
+        return await bot.send_message(user_id, msg_text)  # Recursive call
+    except exceptions.UserDeactivated:
+        logging.error(f"Target [ID:{user_id}]: user is deactivated")
+    except exceptions.TelegramAPIError:
+        logging.exception(f"Target [ID:{user_id}]: failed")
+    else:
+        logging.info(f"Target [ID:{user_id}]: success")
+        return True
+    return False
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
