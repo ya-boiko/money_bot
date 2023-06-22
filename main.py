@@ -73,7 +73,7 @@ async def get_text_message(msg: types.Message):
 
 async def send_message_to_users_handler(
         user_id: int, msg_text: str, disable_notification: bool = False
-) -> Message | bool:
+):
     """
     Safe messages sender
     :param user_id:
