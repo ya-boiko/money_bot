@@ -1,5 +1,6 @@
 """Main script."""
 
+from .telegram import tg_polling
 from .container import Container
 from .settings import Settings
 
@@ -15,4 +16,4 @@ def main():
 def build_app():
     """Builds the application."""
 
-    ...
+    return tg_polling()
